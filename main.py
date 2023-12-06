@@ -1,6 +1,7 @@
-from fluData.flu_data_table import construct_flu_table
+from fluData.flu_data_table import *
 def construct_db():
     construct_flu_table()
+    create_flu_table()
 
 if __name__ == '__main__':
     construct_db()
