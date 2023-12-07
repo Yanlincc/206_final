@@ -2,13 +2,13 @@ import sqlite3
 import requests
 
 def create_database():
-    connection = sqlite3.connect("./database.db")
-
+    connection = sqlite3.connect("../database.db")
     cursor = connection.cursor()
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS population (
-            state_name TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
+            state_name TEXT,
             population INTEGER
         )
     ''')
@@ -17,7 +17,7 @@ def create_database():
     connection.close()
 
 def insert_population_data():
-    connection = sqlite3.connect("./database.db")
+    connection = sqlite3.connect("../database.db")
     cursor = connection.cursor()
 
     base_url = "https://api.census.gov/data/2020/acs/acs5"
@@ -31,13 +31,17 @@ def insert_population_data():
     if response.status_code == 200:
         data = response.json()
 
-        for entry in data[1:]:
+        # Sort the data alphabetically by state_name
+        sorted_data = sorted(data[1:], key=lambda x: x[0])
+
+        # Insert data into the database with the correct structure
+        for idx, entry in enumerate(sorted_data, start=1):
             state_name = entry[0]
             population = entry[1]
             cursor.execute('''
-                INSERT OR REPLACE INTO population (state_name, population)
-                VALUES (?, ?)
-            ''', (state_name, population))
+                INSERT OR REPLACE INTO population (id, state_name, population)
+                VALUES (?, ?, ?)
+            ''', (idx, state_name, population))
 
         connection.commit()
         connection.close()
