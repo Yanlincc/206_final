@@ -1,11 +1,9 @@
 import sqlite3
 
 def merge_tables():
-    conn1 = sqlite3.connect('./population_data.db')
+    conn1 = sqlite3.connect('../database.db')
     cursor1 = conn1.cursor()
 
-    conn2 = sqlite3.connect('./us_states.db')
-    cursor2 = conn2.cursor()
 
     cursor1.execute('''
         CREATE TABLE IF NOT EXISTS merged_data (
@@ -18,8 +16,8 @@ def merge_tables():
     cursor1.execute('SELECT * FROM population')
     population_data = cursor1.fetchall()
 
-    cursor2.execute('SELECT * FROM states')
-    state_abbrev_data = cursor2.fetchall()
+    cursor1.execute('SELECT * FROM states')
+    state_abbrev_data = cursor1.fetchall()
 
     for population_entry in population_data:
         state_name = population_entry[0]
@@ -34,6 +32,5 @@ def merge_tables():
 
     conn1.commit()
     conn1.close()
-    conn2.close()
 
 merge_tables()
