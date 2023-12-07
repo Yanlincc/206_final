@@ -47,10 +47,8 @@ def create_database(data):
         )
     ''')
 
-    # 添加 id 列并按 id 进行排序
     sorted_state_info = list(enumerate(sorted(data, key=lambda x: x[1])))
 
-    # 修正 INSERT INTO 语句的参数数量
     cursor.executemany('INSERT INTO states VALUES (?, ?, ?)', [(item[0] + 1,) + item[1] for item in sorted_state_info])
 
     conn.commit()
@@ -60,7 +58,6 @@ def create_database(data):
 
 state_info = get_us_state_abbreviations()
 if state_info:
-    # 打印原始数据
     print("Original State Abbreviations:")
     for state_name, state_abbrev in state_info:
         print(f"{state_name}, {state_abbrev}")

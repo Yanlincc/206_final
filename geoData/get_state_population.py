@@ -31,10 +31,8 @@ def insert_population_data():
     if response.status_code == 200:
         data = response.json()
 
-        # Sort the data alphabetically by state_name
         sorted_data = sorted(data[1:], key=lambda x: x[0])
 
-        # Insert data into the database with the correct structure
         for idx, entry in enumerate(sorted_data, start=1):
             state_name = entry[0]
             population = entry[1]
