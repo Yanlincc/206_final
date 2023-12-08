@@ -1,5 +1,5 @@
 import requests
-from statistics import mean
+
 
 def get_flu_data():
     url = "https://api.delphi.cmu.edu/epidata/fluview/"

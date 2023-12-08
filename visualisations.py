@@ -2,17 +2,18 @@ import sqlite3
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from draw_population_quarter_avg import plot_flu_cases_vs_population
+from draw_population_quarter_sum import plot_flu_cases_by_quarter
 
 
 def draw_flu_and_population_bar():
-    pass
+    plot_flu_cases_vs_population()
+    plot_flu_cases_by_quarter()
 
 def draw_temp_flu_scatter():
 
-    # Connect to the SQLite database
     conn = sqlite3.connect('database.db')
 
-    # SQL query to join the tables and select relevant columns
     query = """
     SELECT f.state, f.quarter, f.num_patients,
            CASE f.quarter
@@ -25,7 +26,6 @@ def draw_temp_flu_scatter():
     JOIN quarterly_temp t ON f.state = t.state_abbr
     """
 
-    # Execute the query and fetch the data
     cursor = conn.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -33,11 +33,9 @@ def draw_temp_flu_scatter():
     temperatures = [row[3] for row in data if row[3] is not None]
     num_patients = [row[2] for row in data if row[3] is not None]
 
-    # Perform Linear Regression
     slope, intercept = np.polyfit(temperatures, num_patients, 1)
     line = np.poly1d((slope, intercept))
 
-    # Separate the data into two lists for plotting
     temperatures = [row[3] for row in data]
     num_patients = [row[2] for row in data]
 
@@ -49,7 +47,6 @@ def draw_temp_flu_scatter():
     plt.legend()
     plt.show()
 
-    # Close the database connection
     conn.close()
 
 

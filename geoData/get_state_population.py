@@ -48,6 +48,6 @@ def insert_population_data():
         print(response.text)
         connection.close()
 
-create_database()
-
-insert_population_data()
+def construct_population_table():
+    create_database()
+    insert_population_data()

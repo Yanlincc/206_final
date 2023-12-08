@@ -45,4 +45,3 @@ def plot_flu_cases_vs_population(database_path='database.db'):
 
     plt.show()
 
-plot_flu_cases_vs_population()

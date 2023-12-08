@@ -63,6 +63,5 @@ def fetch_all_data():
                 pass
     return state_fips
 
-print(fetch_all_data())
 
 

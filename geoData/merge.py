@@ -1,4 +1,6 @@
 import sqlite3
+from .get_state_abbr import get_us_state_abbreviations
+from .get_state_population import construct_population_table
 
 def merge_tables():
     conn = sqlite3.connect('../database.db')
@@ -33,4 +35,7 @@ def merge_tables():
     conn.commit()
     conn.close()
 
-merge_tables()
+def construct_tables():
+    get_us_state_abbreviations()
+    construct_population_table()
+    merge_tables()
