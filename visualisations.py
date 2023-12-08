@@ -1,17 +1,60 @@
 import sqlite3
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def draw_flu_and_population_bar():
     pass
 
-def draw_quarterly_flu_bar():
-    pass
-
-db_connection = sqlite3.connect('database.db')
-
 def draw_temp_flu_scatter():
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect('database.db')
+
+    # SQL query to join the tables and select relevant columns
+    query = """
+    SELECT f.state, f.quarter, f.num_patients,
+           CASE f.quarter
+               WHEN 'Q1' THEN t.q1_temp
+               WHEN 'Q2' THEN t.q2_temp
+               WHEN 'Q3' THEN t.q3_temp
+               WHEN 'Q4' THEN t.q4_temp
+           END AS temperature
+    FROM flu_data f
+    JOIN quarterly_temp t ON f.state = t.state_abbr
+    """
+
+    # Execute the query and fetch the data
+    cursor = conn.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    temperatures = [row[3] for row in data if row[3] is not None]
+    num_patients = [row[2] for row in data if row[3] is not None]
+
+    # Perform Linear Regression
+    slope, intercept = np.polyfit(temperatures, num_patients, 1)
+    line = np.poly1d((slope, intercept))
+
+    # Separate the data into two lists for plotting
+    temperatures = [row[3] for row in data]
+    num_patients = [row[2] for row in data]
+
+    plt.scatter(temperatures, num_patients, label = 'Data Points')
+    plt.plot(temperatures, line(temperatures), color = 'red', label = 'Regression Line')
+    plt.xlabel('Temperature (°F)')
+    plt.ylabel('Number of Flu Patients')
+    plt.title('Correlation between Temperature and Number of Flu Patients')
+    plt.legend()
+    plt.show()
+
+    # Close the database connection
+    conn.close()
+
+
+
+def draw_quarterly_flu_bar():
 
     conn = sqlite3.connect('database.db')
 
