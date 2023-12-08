@@ -41,9 +41,10 @@ def create_database(data):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS states (
-            id INTEGER PRIMARY KEY,
+            id INTEGER ,
             state_name TEXT,
-            state_abbrev TEXT
+            state_abbrev TEXT,
+            PRIMARY KEY(id, state_name)
         )
     ''')
 
