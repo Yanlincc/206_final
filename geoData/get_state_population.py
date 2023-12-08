@@ -3,12 +3,12 @@ import requests
 
 def create_database():
     connection = sqlite3.connect("../database.db")
-
     cursor = connection.cursor()
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS population (
-            state_name TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
+            state_name TEXT,
             population INTEGER
         )
     ''')
@@ -31,13 +31,15 @@ def insert_population_data():
     if response.status_code == 200:
         data = response.json()
 
-        for entry in data[1:]:
+        sorted_data = sorted(data[1:], key=lambda x: x[0])
+
+        for idx, entry in enumerate(sorted_data, start=1):
             state_name = entry[0]
             population = entry[1]
             cursor.execute('''
-                INSERT OR REPLACE INTO population (state_name, population)
-                VALUES (?, ?)
-            ''', (state_name, population))
+                INSERT OR REPLACE INTO population (id, state_name, population)
+                VALUES (?, ?, ?)
+            ''', (idx, state_name, population))
 
         connection.commit()
         connection.close()

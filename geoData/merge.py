@@ -1,36 +1,36 @@
 import sqlite3
 
 def merge_tables():
-    conn1 = sqlite3.connect('../database.db')
-    cursor1 = conn1.cursor()
+    conn = sqlite3.connect('../database.db')
+    cursor = conn.cursor()
 
-
-    cursor1.execute('''
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS merged_data (
-            state_name TEXT PRIMARY KEY,
-            population INTEGER,
-            state_abbrev TEXT
+            id INTEGER PRIMARY KEY,
+            state_name TEXT,
+            state_abbrev TEXT,
+            population INTEGER
         )
     ''')
 
-    cursor1.execute('SELECT * FROM population')
-    population_data = cursor1.fetchall()
+    cursor.execute('SELECT * FROM population')
+    population_data = cursor.fetchall()
 
-    cursor1.execute('SELECT * FROM states')
-    state_abbrev_data = cursor1.fetchall()
+    cursor.execute('SELECT * FROM states')
+    state_abbrev_data = cursor.fetchall()
 
     for population_entry in population_data:
-        state_name = population_entry[0]
-        population = population_entry[1]
+        state_name = population_entry[1]
+        population = population_entry[2]
 
-        state_abbrev = next((entry[1] for entry in state_abbrev_data if entry[0] == state_name), 'Unknown')
+        state_abbrev = next((entry[2] for entry in state_abbrev_data if entry[1] == state_name), 'Unknown')
 
-        cursor1.execute('''
-            INSERT OR REPLACE INTO merged_data (state_name, population, state_abbrev)
+        cursor.execute('''
+            INSERT OR REPLACE INTO merged_data (state_name, state_abbrev, population)
             VALUES (?, ?, ?)
-        ''', (state_name, population, state_abbrev))
+        ''', (state_name, state_abbrev, population))
 
-    conn1.commit()
-    conn1.close()
+    conn.commit()
+    conn.close()
 
 merge_tables()

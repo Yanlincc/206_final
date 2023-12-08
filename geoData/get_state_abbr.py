@@ -1,6 +1,7 @@
 import sqlite3
 import requests
 
+
 def get_us_state_abbreviations():
     base_url = "https://api.census.gov/data/2020/acs/acs5"
 
@@ -17,12 +18,12 @@ def get_us_state_abbreviations():
         data = response.json()
 
         fips_to_abbrev = {
-            '01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA', '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC',
-            '12': 'FL', '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN', '19': 'IA', '20': 'KS', '21': 'KY',
-            '22': 'LA', '23': 'ME', '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS', '29': 'MO', '30': 'MT',
-            '31': 'NE', '32': 'NV', '33': 'NH', '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND', '39': 'OH',
-            '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI', '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT',
-            '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI', '56': 'WY', '00':'PR'
+            '01': 'al', '02': 'ak', '04': 'az', '05': 'ar', '06': 'ca', '08': 'co', '09': 'ct', '10': 'de', '11': 'dc',
+            '12': 'fl', '13': 'ga', '15': 'hi', '16': 'id', '17': 'il', '18': 'in', '19': 'ia', '20': 'ks', '21': 'ky',
+            '22': 'la', '23': 'me', '24': 'md', '25': 'ma', '26': 'mi', '27': 'mn', '28': 'ms', '29': 'mo', '30': 'mt',
+            '31': 'ne', '32': 'nv', '33': 'nh', '34': 'nj', '35': 'nm', '36': 'ny', '37': 'nc', '38': 'nd', '39': 'oh',
+            '40': 'ok', '41': 'or', '42': 'pa', '44': 'ri', '45': 'sc', '46': 'sd', '47': 'tn', '48': 'tx', '49': 'ut',
+            '50': 'vt', '51': 'va', '53': 'wa', '54': 'wv', '55': 'wi', '56': 'wy', '72': 'pr'
         }
 
         state_info = [(entry[0], fips_to_abbrev.get(entry[1], 'Unknown')) for entry in data[1:]]
@@ -32,6 +33,7 @@ def get_us_state_abbreviations():
         print(response.text)
         return None
 
+
 def create_database(data):
     conn = sqlite3.connect('../database.db')
 
@@ -39,19 +41,24 @@ def create_database(data):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS states (
+            id INTEGER PRIMARY KEY,
             state_name TEXT,
             state_abbrev TEXT
         )
     ''')
 
-    cursor.executemany('INSERT INTO states VALUES (?, ?)', data)
+    sorted_state_info = list(enumerate(sorted(data, key=lambda x: x[1])))
+
+    cursor.executemany('INSERT INTO states VALUES (?, ?, ?)', [(item[0] + 1,) + item[1] for item in sorted_state_info])
 
     conn.commit()
 
     conn.close()
 
+
 state_info = get_us_state_abbreviations()
 if state_info:
+    print("Original State Abbreviations:")
     for state_name, state_abbrev in state_info:
         print(f"{state_name}, {state_abbrev}")
 
