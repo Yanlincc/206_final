@@ -11,9 +11,7 @@ def draw_flu_and_population_bar():
     plot_flu_cases_by_quarter()
 
 def draw_temp_flu_scatter():
-
     conn = sqlite3.connect('database.db')
-
     query = """
     SELECT f.state, f.quarter, f.num_patients,
            CASE f.quarter
@@ -30,26 +28,25 @@ def draw_temp_flu_scatter():
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
-    temperatures = [row[3] for row in data if row[3] is not None]
-    num_patients = [row[2] for row in data if row[3] is not None]
 
-    slope, intercept = np.polyfit(temperatures, num_patients, 1)
-    line = np.poly1d((slope, intercept))
 
-    temperatures = [row[3] for row in data]
-    num_patients = [row[2] for row in data]
+    temperatures = [row[3] for row in data if row[3] is not None and row[3] >= 10]
+    num_patients = [row[2] for row in data if row[3] is not None and row[3] >= 10]
+
+    degree = 2
+    coefficients = np.polyfit(temperatures, num_patients, degree)
+    polynomial = np.poly1d(coefficients)
+
+    temp_range = np.linspace(min(temperatures), max(temperatures), 100)
+    poly_values = polynomial(temp_range)
 
     plt.scatter(temperatures, num_patients, label = 'Data Points')
-    plt.plot(temperatures, line(temperatures), color = 'red', label = 'Regression Line')
+    plt.plot(temp_range, poly_values, color = 'red', label = 'Polynomial Regression Line')
     plt.xlabel('Temperature (°F)')
     plt.ylabel('Number of Flu Patients')
-    plt.title('Correlation between Temperature and Number of Flu Patients')
+    plt.title('Correlation between Temperature (>= 15°F) and Number of Flu Patients')
     plt.legend()
     plt.show()
-
-    conn.close()
-
-
 
 def draw_quarterly_flu_bar():
 
