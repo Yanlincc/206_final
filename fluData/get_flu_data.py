@@ -28,8 +28,10 @@ def get_flu_data():
             print(i)
             return
         flu_data[i] = {}
-        flu_data[i]['Q1'] = round(mean([week_data['wili'] for week_data in data['epidata'][:13]]), 4)
-        flu_data[i]['Q2'] = round(mean([week_data['wili'] for week_data in data['epidata'][14:26]]), 4)
-        flu_data[i]['Q3'] = round(mean([week_data['wili'] for week_data in data['epidata'][27:39]]), 4)
-        flu_data[i]['Q4'] = round(mean([week_data['wili'] for week_data in data['epidata'][40:]]), 4)
+        flu_data[i]['Q1'] = round(sum([week_data['num_patients'] for week_data in data['epidata'][:13]]), 4)
+        flu_data[i]['Q2'] = round(sum([week_data['num_patients'] for week_data in data['epidata'][14:26]]), 4)
+        flu_data[i]['Q3'] = round(sum([week_data['num_patients'] for week_data in data['epidata'][27:39]]), 4)
+        flu_data[i]['Q4'] = round(sum([week_data['num_patients'] for week_data in data['epidata'][40:]]), 4)
+    print(flu_data)
     return flu_data
+get_flu_data()

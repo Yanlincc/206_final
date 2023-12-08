@@ -1,7 +1,7 @@
 import sqlite3
 from fluData.get_flu_data import get_flu_data
 def create_flu_table():
-    conn = sqlite3.connect('./database.db')
+    conn = sqlite3.connect('../database.db')
 
     cursor = conn.cursor()
 
@@ -9,7 +9,7 @@ def create_flu_table():
         CREATE TABLE IF NOT EXISTS flu_data (
             state TEXT NOT NULL,
             quarter TEXT NOT NULL,
-            WILI REAL,
+            num_patients REAL,
             PRIMARY KEY (state, quarter)
         )
     '''
@@ -19,20 +19,22 @@ def create_flu_table():
     conn.commit()
     conn.close()
 
-def insert_flu_data(state, q, wili):
+def insert_flu_data(state, q, num_patients):
     conn = sqlite3.connect('./database.db')
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT OR REPLACE INTO flu_data (state, quarter, WILI)
+        INSERT OR REPLACE INTO flu_data (state, quarter, num_patients)
         VALUES (?, ?, ?)
-    ''', (state, q, wili,))
+    ''', (state, q, num_patients,))
     conn.commit()
     conn.close()
 
 def construct_flu_table():
-    data = get_flu_data()
+    #data = get_flu_data()
+    data = {}
     create_flu_table()
     print(data)
     for i, j in data.items():
         for n, v in j.items():
             insert_flu_data(i, n, v)
+construct_flu_table()
