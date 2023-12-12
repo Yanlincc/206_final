@@ -35,7 +35,7 @@ def get_us_state_abbreviations():
 
 
 def create_database(data):
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('./database.db')
 
     cursor = conn.cursor()
 

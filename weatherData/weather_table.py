@@ -5,7 +5,7 @@ from weatherData.get_weather_data import fetch_all_data
 
 def create_weather_table():
 
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('./database.db')
 
     cursor = conn.cursor()
 
@@ -26,7 +26,7 @@ def create_weather_table():
     conn.close()
 
 def insert_weather_data(id, state, t1, t2, t3, t4):
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('./database.db')
     cursor = conn.cursor()
     cursor.execute('''
         INSERT OR REPLACE INTO quarterly_temp (id, state_abbr, q1_temp, q2_temp, q3_temp, q4_temp)
@@ -38,6 +38,7 @@ def insert_weather_data(id, state, t1, t2, t3, t4):
 def construct_weather_table():
     create_weather_table()
     data = fetch_all_data()
+    #global data
     id = 0
     for i, j in data.items():
         id+=1

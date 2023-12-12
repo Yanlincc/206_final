@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/fluData/flu_data_table.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/geoData/get_state_abbr.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/geoData/get_state_population.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/geoData/merge.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/visualisations.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/weatherData/weather_table.py" dialect="GenericSQL" />
   </component>

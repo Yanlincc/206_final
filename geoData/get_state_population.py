@@ -2,7 +2,7 @@ import sqlite3
 import requests
 
 def create_database():
-    connection = sqlite3.connect("../database.db")
+    connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
 
     cursor.execute('''
@@ -17,7 +17,7 @@ def create_database():
     connection.close()
 
 def insert_population_data():
-    connection = sqlite3.connect("../database.db")
+    connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
 
     base_url = "https://api.census.gov/data/2020/acs/acs5"
