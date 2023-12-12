@@ -8,9 +8,9 @@ def merge_tables():
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS merged_data (
-            id INTEGER PRIMARY KEY,
+            state_abbrev TEXT PRIMARY KEY,
             state_name TEXT,
-            state_abbrev TEXT,
+            id INTEGER,
             population INTEGER
         )
     ''')

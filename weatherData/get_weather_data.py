@@ -1,4 +1,4 @@
-
+import csv
 import requests
 
 API_KEY = 'thILcTseiymmqagfHzmLMzOtFiEIvSlR'
@@ -61,7 +61,15 @@ def fetch_all_data():
             except:
                 state_fips[i][f'q{j}'] = 0
                 pass
+    write_to_csv(state_fips)
     return state_fips
 
+
+def write_to_csv(data):
+    with open('weather_data.csv', 'w', newline = '', encoding = 'utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['state', 'q1_temp', 'q2_temp', 'q3_temp', 'q4_temp'])
+        for i in data:
+            writer.writerow([i, data[i]['q1'],data[i]['q2'],data[i]['q3'],data[i]['q4']])
 
 

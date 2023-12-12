@@ -41,19 +41,17 @@ def create_database(data):
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS states (
-            id INTEGER ,
+            id INTEGER,
             state_name TEXT,
             state_abbrev TEXT,
-            PRIMARY KEY(id, state_name)
+            PRIMARY KEY(id, state_name, state_abbrev)
         )
     ''')
 
-    # 添加 id 列并按 id 进行排序
     sorted_state_info = list(enumerate(sorted(data, key=lambda x: x[1])))
 
-    # 修正 INSERT INTO 语句的参数数量
-    cursor.executemany('INSERT INTO states VALUES (?, ?, ?)', [(item[0] + 1,) + item[1] for item in sorted_state_info])
-
+    try:cursor.executemany('INSERT INTO states VALUES (?, ?, ?)', [(item[0] + 1,) + item[1] for item in sorted_state_info])
+    except: pass
     conn.commit()
 
     conn.close()
@@ -61,7 +59,6 @@ def create_database(data):
 
 state_info = get_us_state_abbreviations()
 if state_info:
-    # 打印原始数据
     print("Original State Abbreviations:")
     for state_name, state_abbrev in state_info:
         print(f"{state_name}, {state_abbrev}")
